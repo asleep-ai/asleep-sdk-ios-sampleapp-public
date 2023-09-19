@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "asleep-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/asleep-ai/asleep-sdk-ios",
+      "state" : {
+        "revision" : "aafa6a921d0f5f043119a1aa139619e7a0e9ba53",
+        "version" : "2.1.0"
+      }
+    }
+  ],
+  "version" : 2
+}
