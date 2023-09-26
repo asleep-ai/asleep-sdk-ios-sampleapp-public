@@ -4,6 +4,7 @@ import SwiftUI
 
 struct LoggerView: View {
     
+    @Binding var error: String?
     @Binding var isTracking: Bool
     @Binding var startTime: Date?
     @Binding var sessionId: String?
@@ -56,6 +57,10 @@ struct LoggerView: View {
                 Text("Tracking Done!")
                     .font(.title)
                 Text("Session ID: \(sessionId ?? "")")
+            } else if let error = error {
+                Text("Tracking Terminated")
+                    .font(.title)
+                Text(error)
             }
         }
     }
@@ -63,7 +68,8 @@ struct LoggerView: View {
 
 struct LoggerView_Previews: PreviewProvider {
     static var previews: some View {
-        LoggerView(isTracking: .constant(true),
+        LoggerView(error: .constant(nil),
+                   isTracking: .constant(true),
                    startTime: .constant(Date()),
                    sessionId: .constant(""),
                    sequenceNumber: .constant(0))

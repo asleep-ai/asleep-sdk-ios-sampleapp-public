@@ -12,6 +12,7 @@ extension MainView {
         @Published var userId: String?
         @Published var sessionId: String?
         @Published var sequenceNumber: Int?
+        @Published var error: String?
 
         @Published var isTracking = false
         @Published var createdReport: Asleep.Model.Report?
@@ -71,12 +72,22 @@ extension MainView.ViewModel: AsleepConfigDelegate {
 // MARK: - Extension for Managing the Sleep Measurement Start to Finish Process
 extension MainView.ViewModel: AsleepSleepTrackingManagerDelegate {
     func didFail(error: Asleep.AsleepError) {
-        print("Failed tracking with the error:", error)
+        switch error {
+        case let .httpStatus(code, _, message) where code == 403 || code == 404:
+            Task { @MainActor in
+                self.isTracking = false
+                self.error = String("\(code): \(message ?? "")")
+            }
+            print("Stopped sleep tracking with the error: ", error)
+        default:
+            print("Failed tracking with the error: ", error)
+        }
     }
 
     func didCreate() {
         Task { @MainActor in
             self.isTracking = true
+            self.error = nil
         }
     }
 

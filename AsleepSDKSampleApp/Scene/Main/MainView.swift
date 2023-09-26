@@ -23,7 +23,8 @@ struct MainView: View {
     var body: some View {
         VStack(alignment: .center) {
             ConfigView(apiKey: $apiKey, userId: $userId)
-            LoggerView(isTracking: $viewModel.isTracking,
+            LoggerView(error: $viewModel.error,
+                       isTracking: $viewModel.isTracking,
                        startTime: $startTime,
                        sessionId: $viewModel.sessionId,
                        sequenceNumber: $viewModel.sequenceNumber)
