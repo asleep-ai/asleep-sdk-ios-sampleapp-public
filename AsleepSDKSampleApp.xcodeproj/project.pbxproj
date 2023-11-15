@@ -14,25 +14,12 @@
 		2CD9177F2AB80F8200373E26 /* CommonButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD9177E2AB80F8200373E26 /* CommonButtonStyle.swift */; };
 		A2B5D1192A4195B000250DBA /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B5D1182A4195B000250DBA /* MainViewModel.swift */; };
 		A2B5D1212A44170800250DBA /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B5D1202A44170800250DBA /* ReportView.swift */; };
-		D4208A112AB2A44600C5090F /* AsleepSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D4208A102AB2A44600C5090F /* AsleepSDK */; };
+		D40043FB2B0359C1007185B9 /* AsleepSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D40043FA2B0359C1007185B9 /* AsleepSDK */; };
 		DE1F2B122A11F5AE005BD704 /* AsleepSDKSampleAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1F2B112A11F5AE005BD704 /* AsleepSDKSampleAppApp.swift */; };
 		DE1F2B142A11F5AE005BD704 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1F2B132A11F5AE005BD704 /* MainView.swift */; };
 		DE1F2B162A11F5AF005BD704 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE1F2B152A11F5AF005BD704 /* Assets.xcassets */; };
 		DE1F2B192A11F5AF005BD704 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE1F2B182A11F5AF005BD704 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		A28E82CA2A1BBE7700992B35 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2C27C6222AB3D74400E8CF5D /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -55,7 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4208A112AB2A44600C5090F /* AsleepSDK in Frameworks */,
+				D40043FB2B0359C1007185B9 /* AsleepSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,7 +150,6 @@
 				DE1F2B0A2A11F5AE005BD704 /* Sources */,
 				DE1F2B0B2A11F5AE005BD704 /* Frameworks */,
 				DE1F2B0C2A11F5AE005BD704 /* Resources */,
-				A28E82CA2A1BBE7700992B35 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -171,7 +157,7 @@
 			);
 			name = AsleepSDKSampleApp;
 			packageProductDependencies = (
-				D4208A102AB2A44600C5090F /* AsleepSDK */,
+				D40043FA2B0359C1007185B9 /* AsleepSDK */,
 			);
 			productName = AsleepSDKSampleApp;
 			productReference = DE1F2B0E2A11F5AE005BD704 /* AsleepSDKSampleApp.app */;
@@ -202,7 +188,7 @@
 			);
 			mainGroup = DE1F2B052A11F5AE005BD704;
 			packageReferences = (
-				D4208A0F2AB2A44600C5090F /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */,
+				D40043F92B0359C1007185B9 /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */,
 			);
 			productRefGroup = DE1F2B0F2A11F5AE005BD704 /* Products */;
 			projectDirPath = "";
@@ -455,20 +441,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D4208A0F2AB2A44600C5090F /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */ = {
+		D40043F92B0359C1007185B9 /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/asleep-ai/asleep-sdk-ios";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
+				minimumVersion = 2.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D4208A102AB2A44600C5090F /* AsleepSDK */ = {
+		D40043FA2B0359C1007185B9 /* AsleepSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D4208A0F2AB2A44600C5090F /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */;
+			package = D40043F92B0359C1007185B9 /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */;
 			productName = AsleepSDK;
 		};
 /* End XCSwiftPackageProductDependency section */

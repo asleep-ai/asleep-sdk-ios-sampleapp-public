@@ -31,7 +31,9 @@ struct ReportView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text(report.session.id)
                 .font(.title2.bold())
+            Text("Created Timezone: \(report.session.createdTimezone.description)")
             Text("Time Range: \(report.session.startTime.dateString + (report.session.endTime.map { " ~ " + $0.dateString } ?? ""))")
+            Text("Unexpected End Time: \(report.session.unexpectedEndTime?.description ?? "N/A")")
             Text("Session State: \(report.session.state.rawValue)")
             Text("Missing Data Ratio: \(String(report.missingDataRatio))")
             Text("Preculiarities: \(report.peculiarities.description)")
