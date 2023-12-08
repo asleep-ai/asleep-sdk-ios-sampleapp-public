@@ -48,15 +48,17 @@ struct ReportView: View {
             Text("Sleep Stages")
                 .font(.body.bold())
                 .padding(.top, 4)
-            let sleepStages = report.session.sleepStages
-            Text("[\(sleepStages.map{ "\($0.rawValue)" }.joined(separator: ", "))]")
+            if let sleepStages = report.session.sleepStages {
+                Text("[\(sleepStages.map{ "\($0.rawValue)" }.joined(separator: ", "))]")
+            }
             
             Text("Breath Stages")
                 .font(.body.bold())
                 .padding(.top, 4)
 
-            let breathStages = report.session.osaStages
-            Text("[\(breathStages.map{ "\($0.rawValue)" }.joined(separator: ", "))]")
+            if let breathStages = report.session.osaStages {
+                Text("[\(breathStages.map{ "\($0.rawValue)" }.joined(separator: ", "))]")
+            }
         }
     }
     
