@@ -64,6 +64,14 @@ struct ReportView: View {
             if let breathStages = report.session.breathStages {
                 Text("[\(breathStages.map(String.init).joined(separator: ", "))]")
             }
+            
+            Text("Snoring Stages")
+                .font(.body.bold())
+                .padding(.top, 4)
+            if let snoringStages = report.session.snoringStages {
+                Text("[\(snoringStages.map(String.init).joined(separator: ", "))]")
+            }
+
         }
     }
 }
