@@ -16,6 +16,7 @@ extension MainView {
 
         @Published var isTracking = false
         @Published var createdReport: Asleep.Model.Report?
+        @Published var createdReportList: [Asleep.Model.SleepSession]?
         @Published var isDeveloperMode: Bool = false {
             didSet {
                 config = nil

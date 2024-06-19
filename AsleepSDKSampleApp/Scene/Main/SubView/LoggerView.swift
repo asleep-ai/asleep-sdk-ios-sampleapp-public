@@ -46,7 +46,7 @@ struct LoggerView: View {
             .font(.title)
 
         VStack() {
-            Text("Start Time : \(startTime?.dateString ?? "")")
+            Text("Start Time : \(startTime?.fullDateString ?? "")")
 
             if let sequenceNumber = sequenceNumber {
                 Text(String(format: "Uploaded Sequence : \(sequenceNumber) (%d min.)", 5 * (sequenceNumber + 1)))
@@ -72,7 +72,7 @@ struct LoggerView: View {
             .font(.title)
 
         VStack() {
-            Text("Start Time : \(startTime?.dateString ?? "")")
+            Text("Start Time : \(startTime?.fullDateString ?? "")")
 
             if let sequenceNumber = sequenceNumber {
                 Text(String(format: "Uploaded Sequence : \(sequenceNumber) (%.1f min.)", 0.5 * Double(sequenceNumber + 1)))

@@ -6,17 +6,18 @@ extension MainView {
     enum Sheet: Identifiable {
         var id: Self { self }
         case report
+        case reportList
     }
 }
 
 struct MainView: View {
     private let pastboard = UIPasteboard.general
     @StateObject private var viewModel = MainView.ViewModel()
-    @AppStorage("sampleapp+apikey") private var apiKey = ""
+    @AppStorage("sampleapp+apikey") private var apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? ""
     @AppStorage("sampleapp+userid") private var userId = ""
-    @AppStorage("sampleapp+baseurl") private var baseUrlString = ""
+    @AppStorage("sampleapp+baseurl") private var baseUrlString = Bundle.main.object(forInfoDictionaryKey: "BASE_URL") as? String ?? ""
     @AppStorage("sampleapp+callbackurl") private var callbackUrlString = ""
-    
+        
     @State private var startTime: Date?
     @State private var activeSheet: Sheet? = nil
     @State private var developerModeUserId = ""
@@ -36,6 +37,7 @@ struct MainView: View {
             
             if !(viewModel.sessionId ?? "").isEmpty {
                 getReportButton
+                getReportListButton
             }
             tackingOnOffButton
                 
@@ -62,6 +64,8 @@ struct MainView: View {
             switch $0 {
             case .report:
                 ReportView(report: viewModel.createdReport)
+            case .reportList:
+                ReportListView(reports: viewModel.reports, reportList: viewModel.createdReportList) // viewModel 연결보다 reports를 전달하는 게 나을 듯 하여 수정
             }
         }
     }
@@ -78,6 +82,20 @@ private extension MainView {
                 if let report = try? await viewModel.reports?.report(sessionId: sessionId) {
                     viewModel.createdReport = report
                     activeSheet = .report
+                }
+            }
+        }.buttonStyle(CommonButtonStyle())
+    }
+    
+    @ViewBuilder
+    var getReportListButton: some View {
+        Button("Get Report List") {
+            Task {
+                let today = Date()
+                let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
+                if let reportList = try? await viewModel.reports?.reports(fromDate: yesterday.simpleDateString, toDate: today.simpleDateString) {
+                    viewModel.createdReportList = reportList
+                    activeSheet = .reportList
                 }
             }
         }.buttonStyle(CommonButtonStyle())
