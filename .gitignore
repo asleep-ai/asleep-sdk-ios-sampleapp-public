@@ -98,5 +98,8 @@ iOSInjectionProject/
 *.framework
 *.xcframework
 
+# Configuration Files
+AsleepSDKSampleApp/*.xcconfig
+
 # Others
 .DS_Store

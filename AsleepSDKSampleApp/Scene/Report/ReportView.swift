@@ -32,7 +32,7 @@ struct ReportView: View {
             Text(report.session.id)
                 .font(.title2.bold())
             Text("Created Timezone: \(report.session.createdTimezone.description)")
-            Text("Time Range: \(report.session.startTime.dateString + (report.session.endTime.map { " ~ " + $0.dateString } ?? ""))")
+            Text("Time Range: \(report.session.startTime.fullDateString + (report.session.endTime.map { " ~ " + $0.fullDateString } ?? ""))")
             Text("Unexpected End Time: \(report.session.unexpectedEndTime?.description ?? "N/A")")
             Text("Session State: \(report.session.state.rawValue)")
             Text("Missing Data Ratio: \(String(report.missingDataRatio))")
@@ -64,14 +64,6 @@ struct ReportView: View {
             if let breathStages = report.session.breathStages {
                 Text("[\(breathStages.map(String.init).joined(separator: ", "))]")
             }
-            
-            Text("Snoring Stages")
-                .font(.body.bold())
-                .padding(.top, 4)
-            if let snoringStages = report.session.snoringStages {
-                Text("[\(snoringStages.map(String.init).joined(separator: ", "))]")
-            }
-
         }
     }
 }
