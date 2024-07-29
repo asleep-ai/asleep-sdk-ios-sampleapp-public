@@ -5,7 +5,6 @@ import SwiftUI
 struct ConfigView: View {
     
     @Binding var apiKey: String
-    @Binding var isDeveloperMode: Bool
     @Binding var isTracking: Bool
     @Binding var userId: String
     
@@ -16,11 +15,6 @@ struct ConfigView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             Spacer()
-            
-            Toggle("Dev Mode", isOn: $isDeveloperMode)
-                .disabled(isTracking)
-                .font(.body)
-                .padding(.leading, 30)
         }
         
         Spacer()
@@ -36,7 +30,6 @@ struct ConfigView: View {
 struct ConfigView_Previews: PreviewProvider {
     static var previews: some View {
         ConfigView(apiKey: .constant("Enter Your API Key"),
-                   isDeveloperMode: .constant(false),
                    isTracking: .constant(false),
                    userId: .constant(""))
     }
