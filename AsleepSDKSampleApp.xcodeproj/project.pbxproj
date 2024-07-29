@@ -13,8 +13,9 @@
 		2C27C62D2AB3D9DC00E8CF5D /* LoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27C62C2AB3D9DC00E8CF5D /* LoggerView.swift */; };
 		2CD9177F2AB80F8200373E26 /* CommonButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD9177E2AB80F8200373E26 /* CommonButtonStyle.swift */; };
 		35628C932C22AF5E00F52F1F /* ReportListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35628C922C22AF5E00F52F1F /* ReportListView.swift */; };
-		35628C952C22B24A00F52F1F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 35628C942C22B24A00F52F1F /* Debug.xcconfig */; };
-		35628C972C22B25E00F52F1F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 35628C962C22B25E00F52F1F /* Release.xcconfig */; };
+		35EF00352C577B6500B4412F /* StartSleepIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35EF00342C577B6500B4412F /* StartSleepIntent.swift */; };
+		35EF00372C577BCA00B4412F /* StopSleepIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35EF00362C577BCA00B4412F /* StopSleepIntent.swift */; };
+		35EF00392C57827600B4412F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 35EF00382C57827600B4412F /* Debug.xcconfig */; };
 		A2B5D1192A4195B000250DBA /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B5D1182A4195B000250DBA /* MainViewModel.swift */; };
 		A2B5D1212A44170800250DBA /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B5D1202A44170800250DBA /* ReportView.swift */; };
 		D40043FB2B0359C1007185B9 /* AsleepSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D40043FA2B0359C1007185B9 /* AsleepSDK */; };
@@ -31,8 +32,10 @@
 		2C27C62C2AB3D9DC00E8CF5D /* LoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerView.swift; sourceTree = "<group>"; };
 		2CD9177E2AB80F8200373E26 /* CommonButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonButtonStyle.swift; sourceTree = "<group>"; };
 		35628C922C22AF5E00F52F1F /* ReportListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportListView.swift; sourceTree = "<group>"; };
-		35628C942C22B24A00F52F1F /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
-		35628C962C22B25E00F52F1F /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		35EF00342C577B6500B4412F /* StartSleepIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartSleepIntent.swift; sourceTree = "<group>"; };
+		35EF00362C577BCA00B4412F /* StopSleepIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopSleepIntent.swift; sourceTree = "<group>"; };
+		35EF00382C57827600B4412F /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		35EF003A2C57828200B4412F /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		A2B5D1172A4094F000250DBA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A2B5D1182A4195B000250DBA /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		A2B5D1202A44170800250DBA /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
@@ -117,6 +120,15 @@
 			path = ReportList;
 			sourceTree = "<group>";
 		};
+		35EF00332C577B4800B4412F /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				35EF00342C577B6500B4412F /* StartSleepIntent.swift */,
+				35EF00362C577BCA00B4412F /* StopSleepIntent.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
 		DE1F2B052A11F5AE005BD704 = {
 			isa = PBXGroup;
 			children = (
@@ -136,8 +148,7 @@
 		DE1F2B102A11F5AE005BD704 /* AsleepSDKSampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				35628C962C22B25E00F52F1F /* Release.xcconfig */,
-				35628C942C22B24A00F52F1F /* Debug.xcconfig */,
+				35EF00332C577B4800B4412F /* Intents */,
 				2CD9177D2AB80F7000373E26 /* Style */,
 				A2B5D1172A4094F000250DBA /* Info.plist */,
 				2C27C6212AB3D73400E8CF5D /* Extension */,
@@ -145,6 +156,8 @@
 				DE1F2B112A11F5AE005BD704 /* AsleepSDKSampleAppApp.swift */,
 				DE1F2B152A11F5AF005BD704 /* Assets.xcassets */,
 				DE1F2B172A11F5AF005BD704 /* Preview Content */,
+				35EF00382C57827600B4412F /* Debug.xcconfig */,
+				35EF003A2C57828200B4412F /* Release.xcconfig */,
 			);
 			path = AsleepSDKSampleApp;
 			sourceTree = "<group>";
@@ -221,10 +234,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35628C972C22B25E00F52F1F /* Release.xcconfig in Resources */,
 				DE1F2B192A11F5AF005BD704 /* Preview Assets.xcassets in Resources */,
 				DE1F2B162A11F5AF005BD704 /* Assets.xcassets in Resources */,
-				35628C952C22B24A00F52F1F /* Debug.xcconfig in Resources */,
+				35EF00392C57827600B4412F /* Debug.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,7 +248,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C27C6232AB3D74400E8CF5D /* Date+Extension.swift in Sources */,
+				35EF00372C577BCA00B4412F /* StopSleepIntent.swift in Sources */,
 				A2B5D1192A4195B000250DBA /* MainViewModel.swift in Sources */,
+				35EF00352C577B6500B4412F /* StartSleepIntent.swift in Sources */,
 				35628C932C22AF5E00F52F1F /* ReportListView.swift in Sources */,
 				DE1F2B142A11F5AE005BD704 /* MainView.swift in Sources */,
 				2C27C62B2AB3D86F00E8CF5D /* ConfigView.swift in Sources */,
@@ -253,7 +267,7 @@
 /* Begin XCBuildConfiguration section */
 		DE1F2B302A11F5B0005BD704 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 35628C942C22B24A00F52F1F /* Debug.xcconfig */;
+			baseConfigurationReference = 35EF00382C57827600B4412F /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -286,6 +300,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_APPINTENTS_DEPLOYMENT_AWARE_PROCESSING = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -314,7 +329,7 @@
 		};
 		DE1F2B312A11F5B0005BD704 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 35628C962C22B25E00F52F1F /* Release.xcconfig */;
+			baseConfigurationReference = 35EF003A2C57828200B4412F /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -347,6 +362,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_APPINTENTS_DEPLOYMENT_AWARE_PROCESSING = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -391,7 +407,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "2.4.7-1";
 				PRODUCT_BUNDLE_IDENTIFIER = com.company.asleepsample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -427,7 +443,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = "2.4.7-1";
 				PRODUCT_BUNDLE_IDENTIFIER = com.company.asleepsample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

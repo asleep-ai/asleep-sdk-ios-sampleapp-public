@@ -20,16 +20,13 @@ struct MainView: View {
         
     @State private var startTime: Date?
     @State private var activeSheet: Sheet? = nil
-    @State private var developerModeUserId = ""
 
     var body: some View {
         VStack(alignment: .center) {
             ConfigView(apiKey: $apiKey,
-                       isDeveloperMode: $viewModel.isDeveloperMode,
                        isTracking: $viewModel.isTracking,
-                       userId: viewModel.isDeveloperMode ? $developerModeUserId : $userId)
+                       userId: $userId)
             LoggerView(error: $viewModel.error,
-                       isDeveloperMode: $viewModel.isDeveloperMode,
                        isTracking: $viewModel.isTracking,
                        startTime: $startTime,
                        sessionId: $viewModel.sessionId,
@@ -54,12 +51,26 @@ struct MainView: View {
             endTextEditing()
         }
         .onChange(of: viewModel.userId ?? "") {
-            if viewModel.isDeveloperMode {
-                developerModeUserId = $0
-            } else {
-                userId = $0
-            }
+            userId = $0
         }
+        .onReceive(NotificationCenter.default.publisher(for: .startSleep), perform: { _ in
+            if !viewModel.isTracking {
+                DispatchQueue.main.async {
+                    startTracking(hasConfig: viewModel.config != nil)
+                }
+            } else {
+                print("Already tracking!")
+            }
+        })
+        .onReceive(NotificationCenter.default.publisher(for: .stopSleep), perform: { _ in
+            if viewModel.isTracking {
+                DispatchQueue.main.async {
+                    stopTracking()
+                }
+            } else {
+                print("Already not tracking!")
+            }
+        })
         .sheet(item: $activeSheet) {
             switch $0 {
             case .report:
@@ -109,7 +120,7 @@ private extension MainView {
             if viewModel.isTracking {
                 stopTracking()
             } else {
-                startTracking(hasConfig: viewModel.isDeveloperMode ? false : viewModel.config != nil)
+                startTracking(hasConfig: viewModel.config != nil)
             }
         }.buttonStyle(CommonButtonStyle())
     }
@@ -119,9 +130,8 @@ private extension MainView {
         if hasConfig {
             viewModel.trackingManager?.startTracking()
         } else {
-            developerModeUserId = ""
             viewModel.initAsleepConfig(apiKey: apiKey,
-                                       userId: viewModel.isDeveloperMode ? developerModeUserId : userId,
+                                       userId: userId,
                                        baseUrl: .init(string: baseUrlString),
                                        callbackUrl: .init(string: callbackUrlString))
         }
