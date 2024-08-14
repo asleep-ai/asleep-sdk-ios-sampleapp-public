@@ -12,10 +12,11 @@
 		2C27C62B2AB3D86F00E8CF5D /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27C62A2AB3D86F00E8CF5D /* ConfigView.swift */; };
 		2C27C62D2AB3D9DC00E8CF5D /* LoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C27C62C2AB3D9DC00E8CF5D /* LoggerView.swift */; };
 		2CD9177F2AB80F8200373E26 /* CommonButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD9177E2AB80F8200373E26 /* CommonButtonStyle.swift */; };
-		35628C932C22AF5E00F52F1F /* ReportListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35628C922C22AF5E00F52F1F /* ReportListView.swift */; };
-		35EF00352C577B6500B4412F /* StartSleepIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35EF00342C577B6500B4412F /* StartSleepIntent.swift */; };
-		35EF00372C577BCA00B4412F /* StopSleepIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35EF00362C577BCA00B4412F /* StopSleepIntent.swift */; };
-		35EF00392C57827600B4412F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 35EF00382C57827600B4412F /* Debug.xcconfig */; };
+		350DB2A02C3D1D5700901892 /* StopSleepIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350DB29F2C3D1D5700901892 /* StopSleepIntent.swift */; };
+		35141D012C1ABB4B00826C76 /* ReportListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35141D002C1ABB4B00826C76 /* ReportListView.swift */; };
+		35141D082C1C15E000826C76 /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 35141D072C1C15E000826C76 /* Debug.xcconfig */; };
+		35141D0A2C1C178600826C76 /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 35141D092C1C178600826C76 /* Release.xcconfig */; };
+		353707F32C37E9E600CDE53E /* StartSleepIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353707F22C37E9E600CDE53E /* StartSleepIntent.swift */; };
 		A2B5D1192A4195B000250DBA /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B5D1182A4195B000250DBA /* MainViewModel.swift */; };
 		A2B5D1212A44170800250DBA /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B5D1202A44170800250DBA /* ReportView.swift */; };
 		D40043FB2B0359C1007185B9 /* AsleepSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D40043FA2B0359C1007185B9 /* AsleepSDK */; };
@@ -31,11 +32,11 @@
 		2C27C62A2AB3D86F00E8CF5D /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
 		2C27C62C2AB3D9DC00E8CF5D /* LoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerView.swift; sourceTree = "<group>"; };
 		2CD9177E2AB80F8200373E26 /* CommonButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonButtonStyle.swift; sourceTree = "<group>"; };
-		35628C922C22AF5E00F52F1F /* ReportListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportListView.swift; sourceTree = "<group>"; };
-		35EF00342C577B6500B4412F /* StartSleepIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartSleepIntent.swift; sourceTree = "<group>"; };
-		35EF00362C577BCA00B4412F /* StopSleepIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopSleepIntent.swift; sourceTree = "<group>"; };
-		35EF00382C57827600B4412F /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
-		35EF003A2C57828200B4412F /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		350DB29F2C3D1D5700901892 /* StopSleepIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopSleepIntent.swift; sourceTree = "<group>"; };
+		35141D002C1ABB4B00826C76 /* ReportListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportListView.swift; sourceTree = "<group>"; };
+		35141D072C1C15E000826C76 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		35141D092C1C178600826C76 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		353707F22C37E9E600CDE53E /* StartSleepIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartSleepIntent.swift; sourceTree = "<group>"; };
 		A2B5D1172A4094F000250DBA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A2B5D1182A4195B000250DBA /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		A2B5D1202A44170800250DBA /* ReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportView.swift; sourceTree = "<group>"; };
@@ -70,6 +71,7 @@
 		2C27C6262AB3D81D00E8CF5D /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				35141CFF2C1ABB3C00826C76 /* ReportList */,
 				2C27C6272AB3D82B00E8CF5D /* Main */,
 				2C27C6282AB3D83300E8CF5D /* Report */,
 			);
@@ -79,7 +81,6 @@
 		2C27C6272AB3D82B00E8CF5D /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				35628C912C22AF4C00F52F1F /* ReportList */,
 				2C27C62E2AB3DAD800E8CF5D /* SubView */,
 				DE1F2B132A11F5AE005BD704 /* MainView.swift */,
 				A2B5D1182A4195B000250DBA /* MainViewModel.swift */,
@@ -112,19 +113,19 @@
 			path = Style;
 			sourceTree = "<group>";
 		};
-		35628C912C22AF4C00F52F1F /* ReportList */ = {
+		35141CFF2C1ABB3C00826C76 /* ReportList */ = {
 			isa = PBXGroup;
 			children = (
-				35628C922C22AF5E00F52F1F /* ReportListView.swift */,
+				35141D002C1ABB4B00826C76 /* ReportListView.swift */,
 			);
 			path = ReportList;
 			sourceTree = "<group>";
 		};
-		35EF00332C577B4800B4412F /* Intents */ = {
+		353707F12C37E9D800CDE53E /* Intents */ = {
 			isa = PBXGroup;
 			children = (
-				35EF00342C577B6500B4412F /* StartSleepIntent.swift */,
-				35EF00362C577BCA00B4412F /* StopSleepIntent.swift */,
+				353707F22C37E9E600CDE53E /* StartSleepIntent.swift */,
+				350DB29F2C3D1D5700901892 /* StopSleepIntent.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -148,7 +149,9 @@
 		DE1F2B102A11F5AE005BD704 /* AsleepSDKSampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				35EF00332C577B4800B4412F /* Intents */,
+				353707F12C37E9D800CDE53E /* Intents */,
+				35141D092C1C178600826C76 /* Release.xcconfig */,
+				35141D072C1C15E000826C76 /* Debug.xcconfig */,
 				2CD9177D2AB80F7000373E26 /* Style */,
 				A2B5D1172A4094F000250DBA /* Info.plist */,
 				2C27C6212AB3D73400E8CF5D /* Extension */,
@@ -156,8 +159,6 @@
 				DE1F2B112A11F5AE005BD704 /* AsleepSDKSampleAppApp.swift */,
 				DE1F2B152A11F5AF005BD704 /* Assets.xcassets */,
 				DE1F2B172A11F5AF005BD704 /* Preview Content */,
-				35EF00382C57827600B4412F /* Debug.xcconfig */,
-				35EF003A2C57828200B4412F /* Release.xcconfig */,
 			);
 			path = AsleepSDKSampleApp;
 			sourceTree = "<group>";
@@ -234,9 +235,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35141D0A2C1C178600826C76 /* Release.xcconfig in Resources */,
 				DE1F2B192A11F5AF005BD704 /* Preview Assets.xcassets in Resources */,
 				DE1F2B162A11F5AF005BD704 /* Assets.xcassets in Resources */,
-				35EF00392C57827600B4412F /* Debug.xcconfig in Resources */,
+				35141D082C1C15E000826C76 /* Debug.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,10 +250,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C27C6232AB3D74400E8CF5D /* Date+Extension.swift in Sources */,
-				35EF00372C577BCA00B4412F /* StopSleepIntent.swift in Sources */,
 				A2B5D1192A4195B000250DBA /* MainViewModel.swift in Sources */,
-				35EF00352C577B6500B4412F /* StartSleepIntent.swift in Sources */,
-				35628C932C22AF5E00F52F1F /* ReportListView.swift in Sources */,
+				350DB2A02C3D1D5700901892 /* StopSleepIntent.swift in Sources */,
+				353707F32C37E9E600CDE53E /* StartSleepIntent.swift in Sources */,
+				35141D012C1ABB4B00826C76 /* ReportListView.swift in Sources */,
 				DE1F2B142A11F5AE005BD704 /* MainView.swift in Sources */,
 				2C27C62B2AB3D86F00E8CF5D /* ConfigView.swift in Sources */,
 				2CD9177F2AB80F8200373E26 /* CommonButtonStyle.swift in Sources */,
@@ -267,7 +269,7 @@
 /* Begin XCBuildConfiguration section */
 		DE1F2B302A11F5B0005BD704 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 35EF00382C57827600B4412F /* Debug.xcconfig */;
+			baseConfigurationReference = 35141D072C1C15E000826C76 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -329,7 +331,7 @@
 		};
 		DE1F2B312A11F5B0005BD704 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 35EF003A2C57828200B4412F /* Release.xcconfig */;
+			baseConfigurationReference = 35141D092C1C178600826C76 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -407,8 +409,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "2.4.7-1";
-				PRODUCT_BUNDLE_IDENTIFIER = com.company.asleepsample;
+				MARKETING_VERSION = "2.4.8-1";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.asleep.AsleepSDKSampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -443,8 +445,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "2.4.7-1";
-				PRODUCT_BUNDLE_IDENTIFIER = com.company.asleepsample;
+				MARKETING_VERSION = "2.4.8-1";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.asleep.AsleepSDKSampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

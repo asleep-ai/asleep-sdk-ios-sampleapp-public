@@ -25,11 +25,6 @@ struct LoggerView: View {
     
     @ViewBuilder
     private func showTrackingView() -> some View {
-        showNormalTrackingView()
-    }
-
-    @ViewBuilder
-    private func showNormalTrackingView() -> some View {
         Text("Tracking Sleep...")
             .font(.title)
 

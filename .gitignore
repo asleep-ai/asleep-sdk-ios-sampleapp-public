@@ -98,7 +98,7 @@ iOSInjectionProject/
 *.framework
 *.xcframework
 
-# Configuration Files
+# Configuration files
 AsleepSDKSampleApp/*.xcconfig
 
 # Others
