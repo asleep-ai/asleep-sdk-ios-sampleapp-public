@@ -11,6 +11,7 @@ extension MainView {
 }
 
 struct MainView: View {
+    private let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     private let pastboard = UIPasteboard.general
     @StateObject private var viewModel = MainView.ViewModel()
     @AppStorage("sampleapp+apikey") private var apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? ""
@@ -20,7 +21,7 @@ struct MainView: View {
         
     @State private var startTime: Date?
     @State private var activeSheet: Sheet? = nil
-
+    
     var body: some View {
         VStack(alignment: .center) {
             ConfigView(apiKey: $apiKey,
@@ -37,12 +38,17 @@ struct MainView: View {
                 getReportListButton
             }
             tackingOnOffButton
-                
-            Image("AsleepLogo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 50)
             
+            HStack {
+                Image("AsleepLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 50)
+                
+                Text(version)
+                    .font(.system(size: 12))
+                    .foregroundColor(.gray)
+            }
         }
         .padding()
         .padding(.bottom, 4)
@@ -55,20 +61,14 @@ struct MainView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .startSleep), perform: { _ in
             if !viewModel.isTracking {
-                DispatchQueue.main.async {
-                    startTracking(hasConfig: viewModel.config != nil)
-                }
+                startTracking(hasConfig: viewModel.config != nil)
             } else {
                 print("Already tracking!")
             }
         })
         .onReceive(NotificationCenter.default.publisher(for: .stopSleep), perform: { _ in
-            if viewModel.isTracking {
-                DispatchQueue.main.async {
-                    stopTracking()
-                }
-            } else {
-                print("Already not tracking!")
+            DispatchQueue.main.async {
+                stopTracking()
             }
         })
         .sheet(item: $activeSheet) {
@@ -76,7 +76,7 @@ struct MainView: View {
             case .report:
                 ReportView(report: viewModel.createdReport)
             case .reportList:
-                ReportListView(reports: viewModel.reports, reportList: viewModel.createdReportList) // viewModel 연결보다 reports를 전달하는 게 나을 듯 하여 수정
+                ReportListView(reports: viewModel.reports, reportList: viewModel.createdReportList)
             }
         }
     }
