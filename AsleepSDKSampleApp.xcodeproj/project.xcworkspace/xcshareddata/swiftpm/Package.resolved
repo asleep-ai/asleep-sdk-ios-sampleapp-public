@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/asleep-ai/asleep-sdk-ios",
       "state" : {
-        "revision" : "bf1679ed8b56e878d31d0805ddc59fc942f571a5",
-        "version" : "2.4.8"
+        "revision" : "ebb9423b69dc3a19e396b4f17bbd795bce08872f",
+        "version" : "3.1.0"
       }
     }
   ],

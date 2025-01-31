@@ -46,11 +46,6 @@ struct ReportView: View {
     func stagesView(report: Asleep.Model.Report) -> some View {
         
         VStack(alignment: .leading, spacing: 10) {
-            Text("Stat")
-                .font(.body.bold())
-                .padding(.top, 4)
-            Text("\(report.stat?.description ?? "null")")
-            
             Text("Sleep Stages")
                 .font(.body.bold())
                 .padding(.top, 4)
@@ -58,68 +53,47 @@ struct ReportView: View {
                 Text("[\(sleepStages.map(String.init).joined(separator: ", "))]")
             }
             
-            Text("Breath Stages")
+            if report.stat != nil {
+                Text("""
+                    SleepEfficiency: \(report.stat?.sleepEfficiency?.description ?? "nil")
+                    SleepLatency: \(report.stat?.sleepLatency?.description ?? "nil")
+                    WakeupLatency: \(report.stat?.wakeupLatency?.description ?? "nil")
+                    SleepTime: \(report.stat?.sleepTime?.description ?? "nil")
+                    WakeTime: \(report.stat?.wakeTime?.description ?? "nil")
+                    LightLatency: \(report.stat?.lightLatency?.description ?? "nil")
+                    DeepLatency: \(report.stat?.deepLatency?.description ?? "nil")
+                    RemLatency: \(report.stat?.remLatency?.description ?? "nil")
+                    TimeInWake: \(report.stat?.timeInWake?.description ?? "nil")
+                    TimeInSleep: \(report.stat?.timeInSleep?.description ?? "nil")
+                    TimeInBed: \(report.stat?.timeInBed?.description ?? "nil")
+                    TimeInSleepPeriod: \(report.stat?.timeInSleepPeriod?.description ?? "nil")
+                    TimeInREM: \(report.stat?.timeInRem?.description ?? "nil")
+                    TimeInLight: \(report.stat?.timeInLight?.description ?? "nil")
+                    TimeInDeep: \(report.stat?.timeInDeep?.description ?? "nil")
+                    WakeRatio: \(report.stat?.wakeRatio?.description ?? "nil")
+                    SleepRatio: \(report.stat?.sleepRatio?.description ?? "nil")
+                    RemRatio: \(report.stat?.remRatio?.description ?? "nil")
+                    LightRatio: \(report.stat?.lightRatio?.description ?? "nil")
+                    DeepRatio: \(report.stat?.deepRatio?.description ?? "nil")
+                    """)
+            } else {
+                Text("Stat is nil")
+            }
+            
+            Text("Snoring Stages")
                 .font(.body.bold())
                 .padding(.top, 4)
-            if let breathStages = report.session.breathStages {
-                Text("[\(breathStages.map(String.init).joined(separator: ", "))]")
+            if let snoringStages = report.session.snoringStages {
+                Text("[\(snoringStages.map(String.init).joined(separator: ", "))]")
             }
-        }
-    }
-}
-
-struct ReportView_Previews: PreviewProvider {
-    static var previews: some View {
-        let dummyReport: Asleep.Model.Report?
-        let jsonData = """
-        {
-            "timezone": "Asia/Seoul",
-            "peculiarities": [],
-            "missingDataRatio": 0.0,
-            "session": {
-                "id": "20230914124256_8ramp",
-                "state": "COMPLETE",
-                "startTime": "2023-09-14T21:42:56+09:00",
-                "endTime":"2023-09-14T22:08:34+09:00",
-                "sleepStages": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-                "breathStages": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            },
-            "stat": {
-                "sleepEfficiency": 0.8,
-                "sleepLatency": 300,
-                "sleepTime": "2023-09-14T21:47:56+09:00",
-                "wakeupLatency": 0,
-                "wakeTime": "2023-09-14T22:08:34+09:00",
-                "timeInWake": 0,
-                "timeInSleep": 1200,
-                "timeInBed": 1538,
-                "timeInSleepPeriod": 1200,
-                "timeInRem": 300,
-                "timeInLight": 900,
-                "timeInDeep": 0,
-                "timeInStableBreath": 1200,
-                "timeInUnstableBreath": 0,
-                "wakeRatio": 1,
-                "sleepRatio": 1,
-                "remRatio": 0.25,
-                "lightRatio": 0.75,
-                "deepRatio": 0,
-                "stableBreathRatio": 1,
-                "unstableBreathRatio": 0,
-                "breathingPattern": "STABLE_BREATH",
-                "breathingIndex": 0
-            }
-        }
-        """.data(using: .utf8)!
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        dummyReport = try? decoder.decode(Asleep.Model.Report.self, from: jsonData)
-        
-        return Group {
-            if let report = dummyReport {
-                ReportView(report: report)
-            } else {
-                Text("Failed to load dummy report")
+            if report.stat != nil {
+                Text("""
+                    TimeInSnoring: \(report.stat?.timeInSnoring?.description ?? "nil")
+                    TimeInNoSnoring: \(report.stat?.timeInNoSnoring?.description ?? "nil")
+                    SnoringRatio: \(report.stat?.snoringRatio?.description ?? "nil")
+                    NoSnoringRatio: \(report.stat?.noSnoringRatio?.description ?? "nil")
+                    SnoringCount: \(report.stat?.snoringCount?.description ?? "nil")
+                    """)
             }
         }
     }
