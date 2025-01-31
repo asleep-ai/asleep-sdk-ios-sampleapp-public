@@ -16,8 +16,8 @@ struct MainView: View {
     @StateObject private var viewModel = MainView.ViewModel()
     @AppStorage("sampleapp+apikey") private var apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? ""
     @AppStorage("sampleapp+userid") private var userId = ""
-    @AppStorage("sampleapp+baseurl") private var baseUrlString = Bundle.main.object(forInfoDictionaryKey: "BASE_URL") as? String ?? ""
-    @AppStorage("sampleapp+callbackurl") private var callbackUrlString = ""
+    @AppStorage("sampleapp+baseurl") private var baseUrl = ""
+    @AppStorage("sampleapp+callbackurl") private var callbackUrl = ""
         
     @State private var startTime: Date?
     @State private var activeSheet: Sheet? = nil
@@ -132,8 +132,8 @@ private extension MainView {
         } else {
             viewModel.initAsleepConfig(apiKey: apiKey,
                                        userId: userId,
-                                       baseUrl: .init(string: baseUrlString),
-                                       callbackUrl: .init(string: callbackUrlString))
+                                       baseUrl: .init(string: baseUrl),
+                                       callbackUrl: .init(string: callbackUrl))
         }
         startTime = Date()
         viewModel.sequenceNumber = nil
