@@ -8,7 +8,9 @@ struct StopSleepIntent: AppIntent {
     static var description = IntentDescription("Stop Sleep Tracking")
 
     func perform() async throws -> some IntentResult {
-        NotificationCenter.default.post(name: .stopSleep, object: nil)
+        await MainActor.run {
+            NotificationCenter.default.post(name: .stopSleep, object: nil)
+        }
         return .result()
     }
 }

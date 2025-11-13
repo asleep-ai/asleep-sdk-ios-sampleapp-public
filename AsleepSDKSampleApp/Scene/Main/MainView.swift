@@ -6,7 +6,6 @@ extension MainView {
     enum Sheet: Identifiable {
         var id: Self { self }
         case report
-        case reportList
     }
 }
 
@@ -21,30 +20,37 @@ struct MainView: View {
         
     @State private var startTime: Date?
     @State private var activeSheet: Sheet? = nil
+    @State private var showInsufficientTimeAlert = false
     
     var body: some View {
         VStack(alignment: .center) {
             ConfigView(apiKey: $apiKey,
-                       isTracking: $viewModel.isTracking,
-                       userId: $userId)
+                       isTracking: .constant(viewModel.isTracking),
+                       userId: $userId,
+                       sessionId: viewModel.sessionId,
+                       isLoading: viewModel.isLoading,
+                       onViewReport: {
+                           Task {
+                               await fetchReportsAndShow()
+                           }
+                       })
             LoggerView(error: $viewModel.error,
-                       isTracking: $viewModel.isTracking,
+                       isTracking: .constant(viewModel.isTracking),
                        startTime: $startTime,
                        sessionId: $viewModel.sessionId,
-                       sequenceNumber: $viewModel.sequenceNumber)
-            
-            if !(viewModel.sessionId ?? "").isEmpty {
-                getReportButton
-                getReportListButton
-            }
+                       sequenceNumber: $viewModel.sequenceNumber,
+                       errorLogs: $viewModel.errorLogs,
+                       currentSleepStage: $viewModel.currentSleepStage,
+                       currentSnoringStage: $viewModel.currentSnoringStage)
+
             tackingOnOffButton
-            
+
             HStack {
                 Image("AsleepLogo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 50)
-                
+
                 Text(version)
                     .font(.system(size: 12))
                     .foregroundColor(.gray)
@@ -71,64 +77,97 @@ struct MainView: View {
                 stopTracking()
             }
         })
-        .sheet(item: $activeSheet) {
-            switch $0 {
-            case .report:
-                ReportView(report: viewModel.createdReport)
-            case .reportList:
-                ReportListView(reports: viewModel.reports, reportList: viewModel.createdReportList)
+        .sheet(item: $activeSheet) { _ in
+            ReportView(reports: viewModel.reports, sessionList: viewModel.createdReportList ?? [])
+        }
+        .alert("Error", isPresented: $viewModel.showError) {
+            Button("OK", role: .cancel) {
+                viewModel.showError = false
             }
+        } message: {
+            Text(viewModel.errorMessage)
+        }
+        .alert(MainView.ViewModel.Strings.insufficientTimeTitle, isPresented: $showInsufficientTimeAlert) {
+            Button(MainView.ViewModel.Strings.insufficientTimeCancel, role: .cancel) {
+                showInsufficientTimeAlert = false
+            }
+            Button(MainView.ViewModel.Strings.insufficientTimeExit, role: .destructive) {
+                performStopTracking()
+            }
+        } message: {
+            Text(MainView.ViewModel.insufficientTimeAlertMessage)
         }
     }
 }
 
 private extension MainView {
-    
-    @ViewBuilder
-    var getReportButton: some View {
-        Button("Get Report") {
-            Task {
-                guard let sessionId: String = viewModel.sessionId else { return }
-                
-                if let report = try? await viewModel.reports?.report(sessionId: sessionId) {
-                    viewModel.createdReport = report
-                    activeSheet = .report
-                }
-            }
-        }.buttonStyle(CommonButtonStyle())
-    }
-    
-    @ViewBuilder
-    var getReportListButton: some View {
-        Button("Get Report List") {
-            Task {
-                let today = Date()
-                let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
-                if let reportList = try? await viewModel.reports?.reports(fromDate: yesterday.simpleDateString, toDate: today.simpleDateString) {
-                    viewModel.createdReportList = reportList
-                    activeSheet = .reportList
-                }
-            }
-        }.buttonStyle(CommonButtonStyle())
-    }
-    
-    @ViewBuilder
-    var tackingOnOffButton: some View {
-        let trackingStatus = viewModel.isTracking ? "Stop Tracking" : "Start Tracking"
 
-        Button(trackingStatus) {
-            if viewModel.isTracking {
-                stopTracking()
-            } else {
-                startTracking(hasConfig: viewModel.config != nil)
+    func fetchReportsAndShow() async {
+        viewModel.isLoading = true
+        defer { viewModel.isLoading = false }
+
+        do {
+            // Auto-initialize config if needed
+            _ = try await viewModel.ensureConfig(
+                apiKey: apiKey,
+                userId: userId,
+                baseUrl: .init(string: baseUrl),
+                callbackUrl: .init(string: callbackUrl)
+            )
+
+            // Reports should be initialized by ensureConfig
+            guard let reports = viewModel.reports else {
+                viewModel.errorMessage = "Reports manager initialization failed."
+                viewModel.showError = true
+                return
             }
-        }.buttonStyle(CommonButtonStyle())
+
+            let today = Date()
+            guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today) else {
+                viewModel.errorMessage = "Failed to calculate date range."
+                viewModel.showError = true
+                return
+            }
+
+            let reportList = try await reports.reports(fromDate: yesterday.simpleDateString, toDate: today.simpleDateString)
+            viewModel.createdReportList = reportList
+            activeSheet = .report
+        } catch {
+            viewModel.errorMessage = "Failed to fetch report list:\n\(error.localizedDescription)"
+            viewModel.showError = true
+        }
+    }
+
+    var tackingOnOffButton: some View {
+        let trackingStatus: String
+        let action: () -> Void
+
+        switch viewModel.trackingState {
+        case .idle:
+            trackingStatus = "Start Tracking"
+            action = { startTracking(hasConfig: viewModel.config != nil) }
+        case .tracking, .interrupted:
+            trackingStatus = "Stop Tracking"
+            action = { stopTracking() }
+        }
+
+        return Button(trackingStatus, action: action)
+            .buttonStyle(CommonButtonStyle())
+            .disabled(viewModel.isLoading)
     }
     
     private func startTracking(hasConfig: Bool) {
         viewModel.sessionId = ""
+        viewModel.clearErrors()
+        viewModel.isLoading = true
         if hasConfig {
+            // Basic usage
             viewModel.trackingManager?.startTracking()
+
+            // Example: Start tracking with additional audio session options (v3.1.7+)
+            // viewModel.trackingManager?.startTracking(additionalAudioSessionOptions: [.duckOthers])
+            // viewModel.trackingManager?.startTracking(additionalAudioSessionOptions: [.allowAirPlay])
+            // viewModel.trackingManager?.startTracking(additionalAudioSessionOptions: [.duckOthers, .allowAirPlay])
         } else {
             viewModel.initAsleepConfig(apiKey: apiKey,
                                        userId: userId,
@@ -140,6 +179,28 @@ private extension MainView {
     }
     
     private func stopTracking() {
+        // Check if tracking time meets minimum requirement
+        guard let trackingStartTime = startTime else {
+            // If startTime is nil, proceed with stop tracking
+            performStopTracking()
+            return
+        }
+
+        let elapsedTime = Date().timeIntervalSince(trackingStartTime)
+        let elapsedMinutes = elapsedTime / 60
+
+        if elapsedMinutes < Double(MainView.ViewModel.minTrackingMinutes) {
+            // Show alert if tracking time is insufficient
+            showInsufficientTimeAlert = true
+            return
+        }
+
+        // Proceed with stop tracking
+        performStopTracking()
+    }
+
+    private func performStopTracking() {
+        viewModel.isLoading = true
         viewModel.trackingManager?.stopTracking()
         viewModel.initReport()
     }
