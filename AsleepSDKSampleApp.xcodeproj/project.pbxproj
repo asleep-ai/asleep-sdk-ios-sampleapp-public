@@ -18,7 +18,7 @@
 		353C36E42EBDD5F80018ADFD /* SleepStagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353C36E12EBDD5F80018ADFD /* SleepStagesView.swift */; };
 		353C36E52EBDD5F80018ADFD /* StackedBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353C36E22EBDD5F80018ADFD /* StackedBarView.swift */; };
 		353C36E62EBDD5F80018ADFD /* SleepStageGraphModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353C36E02EBDD5F80018ADFD /* SleepStageGraphModels.swift */; };
-		6C0909EC2EC56EE600058424 /* AsleepSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 6C0909EB2EC56EE600058424 /* AsleepSDK */; };
+		6C993B092F5809EE00774F84 /* AsleepSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 6C993B082F5809EE00774F84 /* AsleepSDK */; };
 		A2B5D1192A4195B000250DBA /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B5D1182A4195B000250DBA /* MainViewModel.swift */; };
 		A2B5D1212A44170800250DBA /* ReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B5D1202A44170800250DBA /* ReportView.swift */; };
 		DE1F2B122A11F5AE005BD704 /* AsleepSDKSampleAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1F2B112A11F5AE005BD704 /* AsleepSDKSampleAppApp.swift */; };
@@ -69,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6C0909EC2EC56EE600058424 /* AsleepSDK in Frameworks */,
+				6C993B092F5809EE00774F84 /* AsleepSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,7 +201,7 @@
 			);
 			name = AsleepSDKSampleApp;
 			packageProductDependencies = (
-				6C0909EB2EC56EE600058424 /* AsleepSDK */,
+				6C993B082F5809EE00774F84 /* AsleepSDK */,
 			);
 			productName = AsleepSDKSampleApp;
 			productReference = DE1F2B0E2A11F5AE005BD704 /* AsleepSDKSampleApp.app */;
@@ -232,7 +232,7 @@
 			);
 			mainGroup = DE1F2B052A11F5AE005BD704;
 			packageReferences = (
-				6C0909EA2EC56EE600058424 /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */,
+				6C993B072F5809EE00774F84 /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */,
 			);
 			productRefGroup = DE1F2B0F2A11F5AE005BD704 /* Products */;
 			projectDirPath = "";
@@ -423,7 +423,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "3.1.7-1";
+				MARKETING_VERSION = "3.2.0-1";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.asleep.AsleepSDKSampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -459,7 +459,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "3.1.7-1";
+				MARKETING_VERSION = "3.2.0-1";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.asleep.AsleepSDKSampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -495,20 +495,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		6C0909EA2EC56EE600058424 /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */ = {
+		6C993B072F5809EE00774F84 /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/asleep-ai/asleep-sdk-ios";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.1.7;
+				minimumVersion = 3.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6C0909EB2EC56EE600058424 /* AsleepSDK */ = {
+		6C993B082F5809EE00774F84 /* AsleepSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6C0909EA2EC56EE600058424 /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */;
+			package = 6C993B072F5809EE00774F84 /* XCRemoteSwiftPackageReference "asleep-sdk-ios" */;
 			productName = AsleepSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
