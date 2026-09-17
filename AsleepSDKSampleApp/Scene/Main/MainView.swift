@@ -13,6 +13,7 @@ struct MainView: View {
     private let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     private let pastboard = UIPasteboard.general
     @StateObject private var viewModel = MainView.ViewModel()
+    @EnvironmentObject private var setupCoordinator: SetupCoordinator
     @AppStorage("sampleapp+apikey") private var apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? ""
     @AppStorage("sampleapp+userid") private var userId = ""
 
@@ -32,6 +33,9 @@ struct MainView: View {
                                await fetchReportsAndShow()
                            }
                        })
+
+            setupStatusView
+
             Divider()
                 .padding(.vertical, 8)
             LoggerView(error: $viewModel.error,
@@ -124,6 +128,22 @@ struct MainView: View {
 
 private extension MainView {
 
+    /// Product registration runs inside `setup`, so tracking waits for it: a session is only mapped
+    /// to the product when registration finished before the session was created.
+    @ViewBuilder
+    var setupStatusView: some View {
+        if let setupError = setupCoordinator.errorMessage {
+            Text(setupError)
+                .font(.caption)
+                .foregroundColor(.red)
+                .multilineTextAlignment(.center)
+        } else if !setupCoordinator.isComplete {
+            Text("Setting up... \(setupCoordinator.progress)%")
+                .font(.caption)
+                .foregroundColor(.gray)
+        }
+    }
+
     func fetchReportsAndShow() async {
         viewModel.isLoading = true
         defer { viewModel.isLoading = false }
@@ -176,7 +196,7 @@ private extension MainView {
 
         return Button(trackingStatus, action: action)
             .buttonStyle(CommonButtonStyle())
-            .disabled(viewModel.isLoading)
+            .disabled(viewModel.isLoading || (viewModel.trackingState == .idle && !setupCoordinator.isComplete))
     }
     
     private func startTracking(hasConfig: Bool) {
@@ -232,6 +252,7 @@ private extension MainView {
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
+            .environmentObject(SetupCoordinator())
     }
 }
 
