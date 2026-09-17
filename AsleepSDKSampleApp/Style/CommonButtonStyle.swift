@@ -3,6 +3,8 @@
 import SwiftUI
 
 struct CommonButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(8)
@@ -10,8 +12,9 @@ struct CommonButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity)
             .contentShape(Rectangle())
             .foregroundColor(.white)
-            .background(Color.blue)
+            .background(isEnabled ? Color.blue : Color.gray)
             .cornerRadius(4)
+            .opacity(isEnabled ? 1.0 : 0.6)
     }
 }
 
