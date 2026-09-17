@@ -1,7 +1,52 @@
 //  ReportView.swift - Copyright 2023 Asleep
 
 import SwiftUI
+import AVFoundation
 import AsleepSDK
+
+/// Plays one kept segment at a time. Tapping the row that is already playing stops it, and so does
+/// reaching the end of the file or leaving the report sheet.
+final class RecordingPlayer: NSObject, ObservableObject {
+    @Published private(set) var playingURL: URL?
+
+    private var player: AVAudioPlayer?
+
+    func toggle(_ url: URL) {
+        if playingURL == url {
+            stop()
+            return
+        }
+
+        stop()
+
+        do {
+            // Tracking leaves the audio session in `.record`, which would play back silently.
+            try AVAudioSession.sharedInstance().setCategory(.playback)
+            try AVAudioSession.sharedInstance().setActive(true)
+
+            let newPlayer = try AVAudioPlayer(contentsOf: url)
+            newPlayer.delegate = self
+            newPlayer.play()
+            player = newPlayer
+            playingURL = url
+        } catch {
+            print("[Recording] Playback failed:", error)
+            stop()
+        }
+    }
+
+    func stop() {
+        player?.stop()
+        player = nil
+        playingURL = nil
+    }
+}
+
+extension RecordingPlayer: AVAudioPlayerDelegate {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        stop()
+    }
+}
 
 struct ReportView: View {
     @Environment(\.presentationMode) private var presentationMode
@@ -12,6 +57,8 @@ struct ReportView: View {
     @State private var currentReport: Asleep.Model.Report?
     @State private var isLoading: Bool = false
     @State private var errorMessage: String?
+    @State private var recordingFiles: [Asleep.Model.RecordingFile] = []
+    @StateObject private var recordingPlayer = RecordingPlayer()
 
     var currentSession: Asleep.Model.SleepSession? {
         guard !sessionList.isEmpty, currentIndex >= 0, currentIndex < sessionList.count else { return nil }
@@ -99,6 +146,9 @@ struct ReportView: View {
         .onAppear {
             fetchCurrentReport()
         }
+        .onDisappear {
+            recordingPlayer.stop()
+        }
     }
 
     @ViewBuilder
@@ -132,8 +182,82 @@ struct ReportView: View {
 
             // Snoring Stages Section
             snoringStagesSection(report: report)
+
+            Divider()
+
+            // Recordings Section
+            recordingsSection()
         }
         .padding(.vertical, 16)
+    }
+
+    /// Lists the segments kept for the shown session and plays one on tap. Only sessions recorded on
+    /// this device (into this branch's `recordingPath`) have files; anything else shows the empty
+    /// message.
+    @ViewBuilder
+    func recordingsSection() -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Recordings")
+                .font(.headline)
+
+            if recordingFiles.isEmpty {
+                Text("No recordings were kept for this session.")
+                    .font(.system(size: 13))
+                    .foregroundColor(.gray)
+            } else {
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(recordingFiles, id: \.segmentIndex) { file in
+                        recordingRow(file)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    func recordingRow(_ file: Asleep.Model.RecordingFile) -> some View {
+        let isPlaying = file.filePath != nil && file.filePath == recordingPlayer.playingURL
+
+        Button {
+            if let url = file.filePath {
+                recordingPlayer.toggle(url)
+            }
+        } label: {
+            Text("\(isPlaying ? "▶ " : "")\(recordingLabel(file))")
+                .font(.system(size: 14, design: .monospaced))
+                .foregroundColor(.primary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 8)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    func recordingLabel(_ file: Asleep.Model.RecordingFile) -> String {
+        var label = String(format: "#%03d", file.segmentIndex)
+
+        // The timestamp arrives as `yyyy-MM-dd HH:mm:ss...`; only the time part is shown.
+        if let timestamp = file.timestamp, timestamp.count >= 19 {
+            let start = timestamp.index(timestamp.startIndex, offsetBy: 11)
+            let end = timestamp.index(timestamp.startIndex, offsetBy: 19)
+            label += "  \(timestamp[start..<end])"
+        }
+        if file.isSnoringDetected {
+            label += String(format: "  snoring(%.1f)", file.snoreIntensity)
+        }
+        if file.isBreathDetected {
+            label += String(format: "  breath(%.1f)", file.breathSeverity)
+        }
+        label += String(format: "  %.1fdB", file.maxDb)
+
+        return label
+    }
+
+    /// Reads the files back through a `RecordingFileManager` built on the same `recordingPath` the
+    /// tracking manager was given - a different path always lists nothing.
+    func loadRecordingFiles(sessionId: String) {
+        let fileManager = Asleep.createRecordingFileManager(recordingPath: MainView.ViewModel.recordingPath)
+        recordingFiles = fileManager.getAllSegments(sessionId: sessionId).filter { $0.filePath != nil }
     }
 
     @ViewBuilder
@@ -253,6 +377,9 @@ struct ReportView: View {
 
         isLoading = true
         errorMessage = nil
+        // The listed files belong to the report being replaced, so drop them with the playback.
+        recordingPlayer.stop()
+        recordingFiles = []
 
         Task {
             do {
@@ -264,6 +391,7 @@ struct ReportView: View {
 
                 await MainActor.run {
                     currentReport = report
+                    loadRecordingFiles(sessionId: report.session.id)
                     isLoading = false
                 }
             } catch {

@@ -23,6 +23,14 @@ extension MainView {
         // MARK: - Constants
         static let minTrackingMinutes = 5
 
+        /// Base directory the SDK writes kept segments into, as
+        /// `{recordingPath}/audio/{sessionId}/`. The very same URL has to be given to
+        /// `createRecordingFileManager(recordingPath:)`, otherwise the lookup finds nothing.
+        static let recordingPath: URL = {
+            let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            return documents.appendingPathComponent("recordings")
+        }()
+
         static var insufficientTimeAlertMessage: String {
             String(format: Strings.insufficientTimeMessage, minTrackingMinutes)
         }
@@ -147,6 +155,10 @@ extension MainView {
         // Audio route tracking
         @Published var currentAudioRoute: String?
 
+        /// Which recordings to keep (v3.3.0). The plan is the ceiling - this only narrows it, it
+        /// never turns on a kind the plan does not cover. Read when the tracking manager is created.
+        @Published var recordingType: Asleep.RecordingType = .all
+
         // Microphone permission state shown on the main screen
         @Published private(set) var isMicPermissionGranted = false
 
@@ -199,8 +211,14 @@ extension MainView {
 
         func initSleepTrackingManager() {
             guard let config else { return }
+            // v3.3.0 completable overload: an AsleepCompletableTrackingDelegate adds COMPLETE
+            // polling (`didComplete(session:)`), and `recordingPath` is the on/off switch for the
+            // audio files. `recordingType` is read here, so the manager is recreated whenever the
+            // picker changed before a session starts.
             trackingManager = Asleep.createSleepTrackingManager(config: config,
-                                                                delegate: self)
+                                                                delegate: self,
+                                                                recordingPath: Self.recordingPath,
+                                                                recordingType: recordingType)
         }
 
         func initReport() {
@@ -369,7 +387,10 @@ extension MainView.ViewModel: AsleepConfigDelegate {
 }
 
 // MARK: - Extension for Managing the Sleep Measurement Start to Finish Process
-extension MainView.ViewModel: AsleepSleepTrackingManagerDelegate {
+// v3.3.0: AsleepCompletableTrackingDelegate refines AsleepSleepTrackingManagerDelegate with
+// `didCreate(sessionId:)` and `didComplete(session:)`. With a completable delegate the SDK calls
+// `didCreate(sessionId:)` *instead of* `didCreate()`.
+extension MainView.ViewModel: AsleepCompletableTrackingDelegate {
     func didFail(error: Asleep.AsleepError) {
         print("Failed tracking with the error: ", error)
 
@@ -387,12 +408,42 @@ extension MainView.ViewModel: AsleepSleepTrackingManagerDelegate {
         }
     }
 
-    func didCreate() {
+    func didCreate(sessionId: String) {
+        print("Session created:", sessionId)
+
         Task { @MainActor in
+            self.sessionId = sessionId
             self.trackingState = .tracking
             self.error = nil
             self.errorLogs = []
             self.isLoading = false
+        }
+    }
+
+    /// Arrives after `didClose(sessionId:)` once the server finished analysing the session. The
+    /// kept audio files are written by then, so this is the point to look them up.
+    func didComplete(session: Asleep.Model.Session) {
+        print("Session completed:", session.id, "state:", session.state)
+
+        logRecordingFiles(sessionId: session.id)
+    }
+
+    /// Reads the files back through a `RecordingFileManager` built on the same `recordingPath`
+    /// that was given to `createSleepTrackingManager` - a different path always lists nothing.
+    private func logRecordingFiles(sessionId: String) {
+        let recordingFileManager = Asleep.createRecordingFileManager(recordingPath: Self.recordingPath)
+
+        print("[Recording] Stored sessions:", recordingFileManager.getSessions())
+
+        let snoringFiles = recordingFileManager.getSnoringFiles(sessionId: sessionId)
+        let breathFiles = recordingFileManager.getBreathFiles(sessionId: sessionId)
+        print("[Recording] \(sessionId) - snoring: \(snoringFiles.count), breath: \(breathFiles.count)")
+
+        for file in recordingFileManager.getAllSegments(sessionId: sessionId) {
+            print("[Recording] seq \(file.segmentIndex)",
+                  "snoring: \(file.isSnoringDetected)",
+                  "breath: \(file.isBreathDetected)",
+                  "path: \(file.filePath?.lastPathComponent ?? "not kept")")
         }
     }
 

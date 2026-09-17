@@ -25,6 +25,7 @@ struct MainView: View {
         VStack(alignment: .center) {
             ConfigView(isTracking: .constant(viewModel.isTracking),
                        userId: $userId,
+                       recordingType: $viewModel.recordingType,
                        micPermissionGranted: viewModel.isMicPermissionGranted,
                        isLoading: viewModel.isLoading,
                        onViewReport: {
@@ -184,6 +185,10 @@ private extension MainView {
         viewModel.clearErrors()
         viewModel.isLoading = true
         if hasConfig {
+            // The recording type is fixed when the manager is created, so rebuild it here to pick
+            // up whatever the picker holds now.
+            viewModel.initSleepTrackingManager()
+
             // Basic usage
             viewModel.trackingManager?.startTracking()
 
