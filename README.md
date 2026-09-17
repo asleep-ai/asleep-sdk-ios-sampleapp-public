@@ -1,52 +1,59 @@
-# Asleep SDK iOS Sample App
+# Asleep SDK iOS Sample App — `sample/init-appid-polling`
 
-A sample application that demonstrates how to utilize Asleep SDK in iOS.
+A variant of the [standard sample app](https://github.com/asleep-ai/asleep-sdk-ios-sampleapp-public/tree/main)
+that authenticates with **`appId` / `appSecret`** instead of an API key. Everything else — tracking,
+delegates, reports — is identical to the standard branch.
 
-This branch is the **standard implementation**. Every other branch listed below changes exactly one
-thing about it, so you can diff a single integration decision at a time.
+> **Switching from an API key to appId / appSecret requires provisioning.** The credentials are
+> issued per contract — contact **platform-cs@asleep.ai** or your account manager to get an
+> `appId` / `appSecret` before using this branch.
 
-## Standard implementation (this branch)
+## What this branch demonstrates
 
-| Topic | This branch |
+`Asleep.initAsleepConfig(appId:appSecret:...)` (v3.3.0) authenticates with a credential pair rather
+than a static API key. The SDK issues an access token for the credentials, attaches it to every
+request, and refreshes it on its own — the app never sees or stores a token.
+
+```swift
+Asleep.initAsleepConfig(appId: appId,
+                        appSecret: appSecret,
+                        userId: userId.isEmpty ? nil : userId,
+                        baseUrl: baseUrl,
+                        callbackUrl: callbackUrl,
+                        delegate: self)
+```
+
+The result is the same `Asleep.Config` delivered to `userDidJoin(userId:config:)`, so the tracking
+and report code below it is unchanged.
+
+## Changes against the standard branch
+
+| File | Change |
 |---|---|
-| SDK | `asleep-sdk-ios` **3.3.0** (Swift Package Manager) |
-| Authentication | `Asleep.initAsleepConfig(apiKey:userId:baseUrl:callbackUrl:delegate:)` |
-| Tracking | `Asleep.createSleepTrackingManager(config:delegate:)` with `AsleepSleepTrackingManagerDelegate` |
-| Analysis updates | `requestAnalysis()` on every upload, delivered to `analysing(session:)` |
-| Logging | `Asleep.setLogger(_:)` with `AsleepLogger` (`d`/`i`/`w`/`e` + typed `LogTag`) |
-| Recording files | not used |
-
-Key files:
-
-- `AsleepSDKSampleApp/Scene/Main/MainViewModel.swift` — config, tracking manager, delegates
-- `AsleepSDKSampleApp/Scene/Main/MainView.swift` — start/stop tracking, report sheet
-- `AsleepSDKSampleApp/Debug.xcconfig`, `AsleepSDKSampleApp/Release.xcconfig` — API key and base URL
+| `AsleepSDKSampleApp/Scene/Main/MainViewModel.swift` | `initAsleepConfig(...)` and `ensureConfig(...)` take `appId` / `appSecret`; the SDK call uses the `appId:appSecret:` overload |
+| `AsleepSDKSampleApp/Scene/Main/MainView.swift` | `apiKey` is replaced by `appId` / `appSecret`, read from `Bundle.main.object(forInfoDictionaryKey:)` |
+| `AsleepSDKSampleApp/Scene/Main/SubView/ConfigView.swift` | `apiKey` binding renamed to `appId` |
+| `AsleepSDKSampleApp/Info.plist` | `API_KEY` entry replaced by `APP_ID` and `APP_SECRET` |
 
 ## How to run
 
-1. Generate an API Key [here](https://docs-en.asleep.ai/docs/dashboard-generate-api-key).
+1. Get an `appId` / `appSecret` pair for your app from Asleep.
 
-2. Enter the issued API Key in the `API_KEY` field of `Debug.xcconfig` and `Release.xcconfig`.
+2. Enter them in `Debug.xcconfig` and `Release.xcconfig` — the same place the standard branch keeps
+   its API key:
 
    ```
-   API_KEY = YOUR_API_KEY
+   APP_ID = YOUR_APP_ID
+   APP_SECRET = YOUR_APP_SECRET
    ```
+
+   `Info.plist` exposes both through `$(APP_ID)` / `$(APP_SECRET)`, and `MainView` reads them from
+   the bundle. The `.xcconfig` files are git-ignored, so credentials never reach a commit.
 
 3. Resolve the Swift Package for AsleepSDK (File > Packages > Resolve Package Versions).
 
 4. Run the app and review the details in the [Asleep Docs: QuickStart](https://docs-en.asleep.ai/docs/quickstart).
 
-## Sample branches
+## Other branches
 
-Each branch below starts from this one and changes a single integration decision.
-
-| Branch | What it demonstrates |
-|---|---|
-| [`main`](https://github.com/asleep-ai/asleep-sdk-ios-sampleapp-public/tree/main) (default) | The standard implementation described above — API key + `initAsleepConfig` + polling |
-| [`sample/init-complete-recording`](https://github.com/asleep-ai/asleep-sdk-ios-sampleapp-public/tree/sample/init-complete-recording) | Keeping recording files with `recordingPath` / `RecordingType` and `AsleepCompletableTrackingDelegate` |
-| [`sample/setup-product-polling`](https://github.com/asleep-ai/asleep-sdk-ios-sampleapp-public/tree/sample/setup-product-polling) | Registering the device as a product with `Asleep.setup(apiKey:productInfo:delegate:)` before `initAsleepConfig` |
-| [`sample/init-appid-polling`](https://github.com/asleep-ai/asleep-sdk-ios-sampleapp-public/tree/sample/init-appid-polling) | Authenticating with `appId` / `appSecret` instead of an API key |
-
-## Next step
-
-Start adopting the Asleep SDK with the [Asleep Documentation](https://docs-en.asleep.ai/docs/quickstart).
+- [`main` — standard implementation](https://github.com/asleep-ai/asleep-sdk-ios-sampleapp-public/tree/main) (API key authentication, and the index of every sample branch)

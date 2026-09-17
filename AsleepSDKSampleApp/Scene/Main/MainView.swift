@@ -13,7 +13,8 @@ struct MainView: View {
     private let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     private let pastboard = UIPasteboard.general
     @StateObject private var viewModel = MainView.ViewModel()
-    @AppStorage("sampleapp+apikey") private var apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? ""
+    @AppStorage("sampleapp+appid") private var appId = Bundle.main.object(forInfoDictionaryKey: "APP_ID") as? String ?? ""
+    @AppStorage("sampleapp+appsecret") private var appSecret = Bundle.main.object(forInfoDictionaryKey: "APP_SECRET") as? String ?? ""
     @AppStorage("sampleapp+userid") private var userId = ""
 
     @Environment(\.scenePhase) private var scenePhase
@@ -132,7 +133,8 @@ private extension MainView {
             // Auto-initialize config if needed
             // baseUrl/callbackUrl stay nil unless your integration needs a custom endpoint.
             _ = try await viewModel.ensureConfig(
-                apiKey: apiKey,
+                appId: appId,
+                appSecret: appSecret,
                 userId: userId,
                 baseUrl: nil,
                 callbackUrl: nil
@@ -192,7 +194,8 @@ private extension MainView {
             // viewModel.trackingManager?.startTracking(additionalAudioSessionOptions: [.allowAirPlay])
             // viewModel.trackingManager?.startTracking(additionalAudioSessionOptions: [.duckOthers, .allowAirPlay])
         } else {
-            viewModel.initAsleepConfig(apiKey: apiKey,
+            viewModel.initAsleepConfig(appId: appId,
+                                       appSecret: appSecret,
                                        userId: userId,
                                        baseUrl: nil,
                                        callbackUrl: nil)

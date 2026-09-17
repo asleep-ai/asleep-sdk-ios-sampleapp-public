@@ -183,11 +183,15 @@ extension MainView {
             errorMessage = ""
         }
 
-        func initAsleepConfig(apiKey: String,
+        func initAsleepConfig(appId: String,
+                              appSecret: String,
                               userId: String,
                               baseUrl: URL?,
                               callbackUrl: URL?) {
-            Asleep.initAsleepConfig(apiKey: apiKey,
+            // v3.3.0: appId/appSecret overload. The SDK issues an access token for the credentials
+            // and refreshes it on its own - the app never handles the token.
+            Asleep.initAsleepConfig(appId: appId,
+                                    appSecret: appSecret,
                                     userId: userId.isEmpty ? nil : userId,
                                     baseUrl: baseUrl,
                                     callbackUrl: callbackUrl,
@@ -208,7 +212,7 @@ extension MainView {
             reports = Asleep.createReports(config: config)
         }
 
-        func ensureConfig(apiKey: String, userId: String, baseUrl: URL?, callbackUrl: URL?) async throws -> Asleep.Config {
+        func ensureConfig(appId: String, appSecret: String, userId: String, baseUrl: URL?, callbackUrl: URL?) async throws -> Asleep.Config {
             if let config = self.config {
                 return config
             }
@@ -216,7 +220,8 @@ extension MainView {
             return try await withCheckedThrowingContinuation { continuation in
                 self.configContinuation = continuation
                 self.initAsleepConfig(
-                    apiKey: apiKey,
+                    appId: appId,
+                    appSecret: appSecret,
                     userId: userId,
                     baseUrl: baseUrl,
                     callbackUrl: callbackUrl
