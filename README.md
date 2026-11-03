@@ -9,12 +9,13 @@ thing about it, so you can diff a single integration decision at a time.
 
 | Topic | This branch |
 |---|---|
-| SDK | `asleep-sdk-ios` **3.3.0** (Swift Package Manager) |
+| SDK | `asleep-sdk-ios` **3.3.1** (Swift Package Manager) |
 | Authentication | `Asleep.initAsleepConfig(apiKey:userId:baseUrl:callbackUrl:delegate:)` |
 | Tracking | `Asleep.createSleepTrackingManager(config:delegate:)` with `AsleepSleepTrackingManagerDelegate` |
 | Analysis updates | `requestAnalysis()` on every upload, delivered to `analysing(session:)` |
 | Logging | `Asleep.setLogger(_:)` with `AsleepLogger` (`d`/`i`/`w`/`e` + typed `LogTag`) |
 | Recording files | not used |
+| Other app audio | `didDetectOtherAppAudioActive()` schedules a local notification if the pause lasts 5 minutes; cancelled on `didResume()` or `didClose(sessionId:)` |
 
 Key files:
 

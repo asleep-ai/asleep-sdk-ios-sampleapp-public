@@ -3,6 +3,7 @@
 import Foundation
 import Combine
 import AVFoundation
+import UserNotifications
 import AsleepSDK
 
 extension MainView {
@@ -22,6 +23,10 @@ extension MainView {
 
         // MARK: - Constants
         static let minTrackingMinutes = 5
+        /// How long to wait after `didDetectOtherAppAudioActive` before the local notification fires.
+        /// If the SDK resumes within this window (e.g. a short call), the notification is cancelled.
+        static let otherAppAudioNotificationDelayMinutes = 5
+        static let otherAppAudioNotificationId = "ai.asleep.sample.otherAppAudioActive"
 
         static var insufficientTimeAlertMessage: String {
             String(format: Strings.insufficientTimeMessage, minTrackingMinutes)
@@ -90,6 +95,10 @@ extension MainView {
             static let insufficientTimeMessage = "You need to track for at least %d minutes to receive a sleep report. Do you want to exit without a report?"
             static let insufficientTimeExit = "Exit"
             static let insufficientTimeCancel = "Cancel"
+
+            // Other App Audio Notification
+            static let otherAppAudioNotificationTitle = "Sleep tracking is paused"
+            static let otherAppAudioNotificationBody = "Another app has been using audio for %d minutes. Tracking resumes automatically once it ends."
         }
 
         private enum SleepStage: Int {
@@ -172,7 +181,12 @@ extension MainView {
         ]
 
         static func isWarning(_ error: Asleep.AsleepError) -> Bool {
-            warningErrorCodes.contains(error.errorCode)
+            // The SDK keeps the session open on this error and restarts recording once the app comes
+            // back to the foreground (e.g. after an emergency alert in the background), so stopping
+            // here would end a session that can still recover. Asleep's own apps ignore it the same way.
+            // It maps to the generic `.unknown` error code, so it is matched by case instead of code.
+            if case .cannotActivateInBackground = error { return true }
+            return warningErrorCodes.contains(error.errorCode)
         }
 
         func clearErrors() {
@@ -289,6 +303,7 @@ extension MainView {
                 self.showError = true
 
                 if stopTracking {
+                    self.cancelOtherAppAudioNotification()
                     /* A fatal error does not stop the SDK session by itself: without this call
                        the microphone stays on and a new startTracking() is rejected because the
                        session is still alive. Guarded by the state check so a failure from this
@@ -405,6 +420,7 @@ extension MainView.ViewModel: AsleepSleepTrackingManagerDelegate {
     }
 
     func didClose(sessionId: String) {
+        cancelOtherAppAudioNotification()
         Task { @MainActor in
             self.trackingState = .idle
             self.sessionId = sessionId
@@ -457,8 +473,16 @@ extension MainView.ViewModel: AsleepSleepTrackingManagerDelegate {
         }
     }
 
+    func didDetectOtherAppAudioActive() {
+        // The SDK tried to resume but another app (call, VoIP, alarm) still holds the audio. It keeps
+        // waiting and resumes on its own, so the sample only lets the user know if it takes a while.
+        print("Other app audio is active - tracking will resume once it ends")
+        scheduleOtherAppAudioNotification()
+    }
+
     func didResume() {
         print("Tracking is resumed")
+        cancelOtherAppAudioNotification()
         Task { @MainActor in
             self.trackingState = .tracking
             // All data remains intact, tracking continues from where it was interrupted
@@ -506,5 +530,52 @@ extension MainView.ViewModel: AsleepSleepTrackingManagerDelegate {
         // You can add custom logic here after the route changes
         // Example: Resume audio playback if needed
         // audioPlayer?.play()
+    }
+}
+
+// MARK: - Local Notification for Other App Audio (v3.3.1+)
+/// While another app holds the audio, tracking is paused without the user noticing. The sample schedules a
+/// local notification after `otherAppAudioNotificationDelayMinutes` and cancels it as soon as tracking
+/// resumes or the session ends, so the user is only told when the pause lasts.
+extension MainView.ViewModel {
+    /// Asks for notification permission. Called when tracking starts, because by the time the callback
+    /// arrives the app is usually in the background and cannot show the permission prompt.
+    func requestNotificationAuthorization() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
+            if let error {
+                print("[Notification] Authorization failed: \(error)")
+            } else {
+                print("[Notification] Authorization granted: \(granted)")
+            }
+        }
+    }
+
+    func scheduleOtherAppAudioNotification() {
+        let delayMinutes = Self.otherAppAudioNotificationDelayMinutes
+
+        let content = UNMutableNotificationContent()
+        content.title = Strings.otherAppAudioNotificationTitle
+        content.body = String(format: Strings.otherAppAudioNotificationBody, delayMinutes)
+        content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(delayMinutes * 60), repeats: false)
+        // A fixed identifier replaces any earlier pending request, so repeated callbacks never stack up.
+        let request = UNNotificationRequest(identifier: Self.otherAppAudioNotificationId, content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error {
+                print("[Notification] Failed to schedule: \(error)")
+            } else {
+                print("[Notification] Scheduled in \(delayMinutes) min")
+            }
+        }
+    }
+
+    /// Removes both the pending request and, if it already fired, the stale notification in Notification Center.
+    func cancelOtherAppAudioNotification() {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [Self.otherAppAudioNotificationId])
+        center.removeDeliveredNotifications(withIdentifiers: [Self.otherAppAudioNotificationId])
+        print("[Notification] Cancelled")
     }
 }
