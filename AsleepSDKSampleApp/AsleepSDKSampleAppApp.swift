@@ -2,6 +2,7 @@
 
 import SwiftUI
 import AsleepSDK
+import UserNotifications
 
 /// Runs `Asleep.setup(...)` once at launch and publishes its outcome.
 ///
@@ -83,6 +84,7 @@ final class SetupCoordinator: ObservableObject, AsleepSetupDelegate {
 
 @main
 struct AsleepSDKSampleAppApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var setupCoordinator: SetupCoordinator
 
     init() {
@@ -96,5 +98,20 @@ struct AsleepSDKSampleAppApp: App {
             MainView()
                 .environmentObject(setupCoordinator)
         }
+    }
+}
+
+final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+
+    /// Shows local notifications as a banner even while the app is in the foreground.
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .list, .sound])
     }
 }
