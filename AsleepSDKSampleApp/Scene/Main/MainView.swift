@@ -185,6 +185,7 @@ private extension MainView {
         viewModel.sessionId = ""
         viewModel.clearErrors()
         viewModel.isLoading = true
+        viewModel.requestNotificationAuthorization()
         if hasConfig {
             // Basic usage
             viewModel.trackingManager?.startTracking()
