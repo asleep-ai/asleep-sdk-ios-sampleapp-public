@@ -184,6 +184,7 @@ private extension MainView {
         viewModel.sessionId = ""
         viewModel.clearErrors()
         viewModel.isLoading = true
+        viewModel.requestNotificationAuthorization()
         if hasConfig {
             // The recording type is fixed when the manager is created, so rebuild it here to pick
             // up whatever the picker holds now.
