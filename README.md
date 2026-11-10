@@ -9,7 +9,7 @@ thing about it, so you can diff a single integration decision at a time.
 
 | Topic | This branch |
 |---|---|
-| SDK | `asleep-sdk-ios` **3.3.1** (Swift Package Manager) |
+| SDK | `asleep-sdk-ios` **3.3.2** (Swift Package Manager) |
 | Authentication | `Asleep.initAsleepConfig(apiKey:userId:baseUrl:callbackUrl:delegate:)` |
 | Tracking | `Asleep.createSleepTrackingManager(config:delegate:)` with `AsleepSleepTrackingManagerDelegate` |
 | Analysis updates | `requestAnalysis()` on every upload, delivered to `analysing(session:)` |
