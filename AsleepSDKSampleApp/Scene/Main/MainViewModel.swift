@@ -172,12 +172,15 @@ extension MainView {
 
         private var configContinuation: CheckedContinuation<Asleep.Config, Error>?
 
-        /// Same set as the Android sample's `isWarning`: the session keeps running through these, so
-        /// they belong in the warning log rather than in a blocking alert.
+        /// The session keeps running through these, so they belong in the warning log rather than in
+        /// a blocking alert.
+        /// `uploadServerError` (23500): upload 5xx, and 408 from 3.3.3 — the SDK skips that chunk and
+        /// keeps tracking. Error codes are beta until v4.0.0.
         private static let warningErrorCodes: [Asleep.AsleepErrorCode] = [
             .audioSilenced,
             .audioUnsilenced,
-            .uploadFailed
+            .uploadFailed,
+            .uploadServerError
         ]
 
         static func isWarning(_ error: Asleep.AsleepError) -> Bool {
